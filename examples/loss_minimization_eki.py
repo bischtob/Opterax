@@ -3,7 +3,7 @@ import jax.numpy as jnp
 from jax import random as rnd
 
 # Update follows eqns. (4) and (5) of Schillings and Stuart (2017)
-def update_ensemble(u, g, obs_mean, obs_noise_cov, dt = 1.0, deterministic = True):
+def update_ensemble(u, g, obs_mean, obs_noise_cov, dt=1.0, deterministic=True, key=rnd.PRNGKey(0)):
     # u: N_par × N_ens, g: N_obs × N_ens
     N_ens = u.shape[1]
     N_obs = g.shape[0]
@@ -11,10 +11,10 @@ def update_ensemble(u, g, obs_mean, obs_noise_cov, dt = 1.0, deterministic = Tru
     # means and covariances
     u_mean = jnp.mean(u, axis=1)
     g_mean = jnp.mean(g, axis=1)
-    du = (u.transpose() - u_mean).transpose()
-    dg = (g.transpose() - g_mean).transpose()
-    cov_ug = jnp.matmul(du, dg.transpose()) # N_par × N_obs
-    cov_gg = jnp.matmul(dg, dg.transpose()) # N_obs × N_obs
+    du = (u.T - u_mean).T
+    dg = (g.T - g_mean).T
+    cov_ug = jnp.matmul(du, dg.T) # N_par × N_obs
+    cov_gg = jnp.matmul(dg, dg.T) # N_obs × N_obs
 
     # scale noise using Δt
     scaled_obs_noise_cov = obs_noise_cov / dt # N_obs × N_obs
@@ -32,13 +32,10 @@ def update_ensemble(u, g, obs_mean, obs_noise_cov, dt = 1.0, deterministic = Tru
     return u_updated
 
 if __name__ == "__main__":
-    # rng
-    key = rnd.PRNGKey(0)
-
     N_par, N_obs, N_ens = 3, 1, 10
     u = jnp.ones((N_par, N_ens))
     g = jnp.ones((N_obs, N_ens))
     obs_mean = jnp.ones((N_obs, 1))
     obs_noise_cov = 1e-6 * jnp.eye(N_obs)
 
-    update_ensemble(u, g, obs_mean, obs_noise_cov)
+    print(update_ensemble(u, g, obs_mean, obs_noise_cov))
