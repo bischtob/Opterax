@@ -1,7 +1,6 @@
 import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
-import time
 
 from jax import random as rnd
 
@@ -11,17 +10,14 @@ def update_ensemble(u, g, obs_mean, obs_noise_cov, dt=1.0, deterministic=True, k
     N_ens = u.shape[1]
     N_obs = g.shape[0]
 
-    # means and covariances
-    u_mean = jnp.mean(u, axis=1)
-    g_mean = jnp.mean(g, axis=1)
-    du = (u.T - u_mean).T
-    dg = (g.T - g_mean).T
-    cov_ug = jnp.matmul(du, dg.T) # N_par × N_obs
-    cov_gg = jnp.matmul(dg, dg.T) # N_obs × N_obs
+    # covariances
+    cov_ug = cov(u, g, corrected=False) # N_par × N_obs
+    cov_gg = cov(g, g, corrected=False) # N_obs × N_obs
 
     # scale noise using Δt
     scaled_obs_noise_cov = obs_noise_cov / dt # N_obs × N_obs
-    noise = rnd.normal(key, (N_obs, N_ens))
+    noise = rnd.multivariate_normal(key, jnp.zeros((n_obs, 1)), obs_noise_cov, (N_ens,)).T
+    print(noise.shape)
 
     # add obs_mean (N_obs) to each column of noise (N_obs × N_ens) if
     # G is deterministic
@@ -33,6 +29,16 @@ def update_ensemble(u, g, obs_mean, obs_noise_cov, dt=1.0, deterministic=True, k
     u_updated = u + jnp.matmul(cov_ug, tmp) # [N_par × N_ens]
 
     return u_updated
+
+def cov(A, B, corrected=False):
+    A_mean = jnp.mean(A, axis=1)
+    B_mean = jnp.mean(B, axis=1)
+    dA = (A.T - A_mean).T
+    dB = (B.T - B_mean).T
+    n = A.shape[1]
+    n = n-1 if corrected else n
+
+    return jnp.matmul(dA, dB.T) / n
 
 if __name__ == "__main__":
     # rng for reproducibility
@@ -63,7 +69,7 @@ if __name__ == "__main__":
 
     # do optimization loop
     n_ens = 50 # number of ensemble members
-    n_iter = 20 # number of EKI iterations
+    n_iter = 1 # number of EKI iterations
     ensemble = prior(key, prior_mean, prior_cov, (n_ens,)).T
     storage_g = []
     storage_u = [ensemble.copy()]
