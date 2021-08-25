@@ -29,16 +29,6 @@ def update_ensemble(u, g, obs_mean, obs_noise_cov, prior_mean, prior_cov, key=rn
 
     return u_updated
 
-def cov(A, B, corrected=False):
-    A_mean = jnp.mean(A, axis=1)
-    B_mean = jnp.mean(B, axis=1)
-    dA = (A.T - A_mean).T
-    dB = (B.T - B_mean).T
-    n = A.shape[1]
-    n = n-1 if corrected else n
-
-    return jnp.matmul(dA, dB.T) / n
-
 if __name__ == "__main__":
     # rng for reproducibility
     key = rnd.PRNGKey(0)

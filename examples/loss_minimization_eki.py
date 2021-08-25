@@ -17,7 +17,6 @@ def update_ensemble(u, g, obs_mean, obs_noise_cov, dt=1.0, deterministic=True, k
     # scale noise using Δt
     scaled_obs_noise_cov = obs_noise_cov / dt # N_obs × N_obs
     noise = rnd.multivariate_normal(key, jnp.zeros((n_obs, 1)), obs_noise_cov, (N_ens,)).T
-    print(noise.shape)
 
     # add obs_mean (N_obs) to each column of noise (N_obs × N_ens) if
     # G is deterministic
@@ -29,16 +28,6 @@ def update_ensemble(u, g, obs_mean, obs_noise_cov, dt=1.0, deterministic=True, k
     u_updated = u + jnp.matmul(cov_ug, tmp) # [N_par × N_ens]
 
     return u_updated
-
-def cov(A, B, corrected=False):
-    A_mean = jnp.mean(A, axis=1)
-    B_mean = jnp.mean(B, axis=1)
-    dA = (A.T - A_mean).T
-    dB = (B.T - B_mean).T
-    n = A.shape[1]
-    n = n-1 if corrected else n
-
-    return jnp.matmul(dA, dB.T) / n
 
 if __name__ == "__main__":
     # rng for reproducibility
