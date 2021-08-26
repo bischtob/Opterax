@@ -13,8 +13,10 @@ def update_ensemble(u, g, obs_mean, obs_noise_cov, prior_mean, prior_cov, key=rn
     u_mean = jnp.mean(u, axis=1)
     g_mean = jnp.mean(g, axis=1)
     du = (u.T - u_mean).T
-    cov_uu = cov(u, u) # N_par × N_obs
 
+    # cross-covariances
+    cov_uu = jnp.atleast_2d(jnp.cov(u, bias=True))  # N_par × N_par
+                        
     # update step
     E = (g.T - g_mean).T # N_obs × N_ens
     R = (g.T - obs_mean).T # N_obs × N_ens
@@ -28,17 +30,6 @@ def update_ensemble(u, g, obs_mean, obs_noise_cov, prior_mean, prior_cov, key=rn
     u_updated = implicit + jnp.sqrt(2 * dt) * noise
 
     return u_updated
-
-
-def cov(A, B, corrected=False):
-    A_mean = jnp.mean(A, axis=1)
-    B_mean = jnp.mean(B, axis=1)
-    dA = (A.T - A_mean).T
-    dB = (B.T - B_mean).T
-    n = A.shape[1]
-    n = n-1 if corrected else n
-
-    return jnp.matmul(dA, dB.T) / n
 
 
 if __name__ == "__main__":
@@ -70,7 +61,7 @@ if __name__ == "__main__":
 
     # do optimization loop
     n_ens = 10 # number of ensemble members
-    n_iter = 1 # number of EKI iterations
+    n_iter = 10 # number of EKI iterations
     ensemble = prior(key, prior_mean, prior_cov, (n_ens,)).T
     
     storage_g = []
