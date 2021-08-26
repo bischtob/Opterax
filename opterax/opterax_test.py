@@ -5,7 +5,7 @@ import opterax
 
 
 class OpteraxTest(absltest.TestCase):
-  """Test optax can be imported correctly."""
+  """Test opterax can be imported correctly."""
 
   #def test_import(self):
   #  self.assertTrue(hasattr(opterax, 'EnsembleTransformation'))
