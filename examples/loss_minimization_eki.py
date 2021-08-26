@@ -7,12 +7,12 @@ from jax import random as rnd
 # Update follows eqns. (4) and (5) of Schillings and Stuart (2017)
 def update_ensemble(u, g, obs_mean, obs_noise_cov, dt=1.0, deterministic=True, key=rnd.PRNGKey(0)):
     # u: N_par × N_ens, g: N_obs × N_ens
-    N_ens = u.shape[1]
+    N_par, N_ens = u.shape
     N_obs = g.shape[0]
 
-    # covariances
-    cov_ug = cov(u, g) # N_par × N_obs
-    cov_gg = cov(g, g) # N_obs × N_obs
+    # cross-covariances
+    cov_ug = jnp.atleast_2d(jnp.cov(u, g, bias=True)[:N_par,-N_obs:]) # N_par × N_obs
+    cov_gg = jnp.atleast_2d(jnp.cov(g, bias=True)) # N_obs × N_obs
 
     # scale noise using Δt
     scaled_obs_noise_cov = obs_noise_cov / dt # N_obs × N_obs
@@ -28,17 +28,6 @@ def update_ensemble(u, g, obs_mean, obs_noise_cov, dt=1.0, deterministic=True, k
     u_updated = u + jnp.matmul(cov_ug, tmp) # [N_par × N_ens]
 
     return u_updated
-
-
-def cov(A, B, corrected=False):
-    A_mean = jnp.mean(A, axis=1)
-    B_mean = jnp.mean(B, axis=1)
-    dA = (A.T - A_mean).T
-    dB = (B.T - B_mean).T
-    n = A.shape[1]
-    n = n-1 if corrected else n
-
-    return jnp.matmul(dA, dB.T) / n
 
 
 if __name__ == "__main__":
