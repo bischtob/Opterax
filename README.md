@@ -1,10 +1,13 @@
 # Opterax
 
-[![tests][ci-bld-img]][ci-bld-url]
+[![tests][tests-bld-img]][tests-bld-url]
+[![pep8][pep8-bld-img]][pep8-bld-url]
 
-[ci-bld-img]: https://github.com/bischtob/opterax/workflows/ci/badge.svg
-[ci-bld-url]: https://github.com/bischtob/opterax/actions?query=workflow%3ATests
 
+[tests-bld-img]: https://github.com/bischtob/opterax/workflows/tests/badge.svg
+[tests-bld-url]: https://github.com/bischtob/opterax/actions?query=workflow%3ATests
+[pep8-bld-img]: https://github.com/bischtob/opterax/workflows/pep8/badge.svg
+[pep8-bld-url]: https://github.com/bischtob/opterax/actions?query=workflow%3ALintering]
 ## Introduction
 
 Ensemble transformation and optimization suite written in JAX.
