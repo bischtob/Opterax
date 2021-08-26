@@ -1,6 +1,5 @@
 """Tests for opterax._src.loss."""
 
-from absl.testing import absltest
 from absl.testing import parameterized
 
 import chex
