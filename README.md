@@ -1,6 +1,6 @@
 # Opterax
 
-![CI status](https://github.com/bischtob/opterax/workflows/tests/badge.svg)
+![CI status](https://github.com/bischtob/opterax/workflows/ci/badge.svg)
 
 ## Introduction
 
