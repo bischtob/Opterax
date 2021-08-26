@@ -1,6 +1,9 @@
 # Opterax
 
-![CI status](https://github.com/bischtob/opterax/workflows/ci/badge.svg)
+[![ci][ci-bld-img]][ci-bld-url]
+
+[ci-bld-img]: https://github.com/bischtob/opterax/workflows/ci/badge.svg
+[ci-bld-url]: https://github.com/bischtob/opterax/actions?query=workflow%3ATests
 
 ## Introduction
 
