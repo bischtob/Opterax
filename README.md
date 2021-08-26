@@ -1,4 +1,4 @@
-# Opterax
+# Opterax [dev]
 
 [![tests][tests-bld-img]][tests-bld-url]
 [![pep8][pep8-bld-img]][pep8-bld-url]
