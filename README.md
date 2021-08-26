@@ -8,6 +8,7 @@
 [tests-bld-url]: https://github.com/bischtob/opterax/actions?query=workflow%3ATests
 [pep8-bld-img]: https://github.com/bischtob/opterax/workflows/pep8/badge.svg
 [pep8-bld-url]: https://github.com/bischtob/opterax/actions?query=workflow%3ALintering]
+
 ## Introduction
 
 Ensemble transformation and optimization suite written in JAX.

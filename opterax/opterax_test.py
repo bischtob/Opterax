@@ -1,7 +1,6 @@
 """Tests for opterax."""
 
 from absl.testing import absltest
-import opterax
 
 
 class OpteraxTest(absltest.TestCase):
