@@ -27,5 +27,5 @@ def l2_loss(
   """
   chex.assert_type([predictions], float)
   errors = (predictions - targets) if (targets is not None) else predictions
-  
+
   return 0.5 * (errors)**2
