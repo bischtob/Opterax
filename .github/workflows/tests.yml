@@ -25,6 +25,7 @@ jobs:
         run: |
           set -xe
           pip install --upgrade pip setuptools wheel
+          pip install pytest-xdist pytype
           pip install -r requirements/requirements.txt
           pip install -r requirements/requirements-test.txt
         shell: bash
