@@ -1,8 +1,9 @@
+"""Standard losses used in optimization.
+"""
+
 from typing import Optional
 
 import chex
-import jax.numpy as jnp
-import numpy as np
 
 def l2_loss(
     predictions: chex.Array,
