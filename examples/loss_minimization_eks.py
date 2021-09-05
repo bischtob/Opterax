@@ -2,6 +2,7 @@ import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
 
+
 from jax import random as rnd
 
 # TODO!: Add reference for equations
@@ -72,19 +73,21 @@ if __name__ == "__main__":
          storage_u.append(ensemble.copy())
          storage_g.append(evaluations.copy())
 
-    # do plotting
-    u_init = storage_u[1]
-    u1_min = min(min(u[0, :]) for u in storage_u)
-    u1_max = max(max(u[0, :]) for u in storage_u)
-    u2_min = min(min(u[1, :]) for u in storage_u)
-    u2_max = max(max(u[1, :]) for u in storage_u)
-    xlim = (u1_min, u1_max)
-    ylim = (u2_min, u2_max)
-    for i, u in enumerate(storage_u):
-        plt.cla()
-        plt.title(str(i))
-        plt.plot(u[0, :], u[1, :], 'kx')
-        plt.xlim(xlim)
-        plt.ylim(ylim)
-        plt.show()
-        plt.pause(0.25)
+    print(storage_u)
+
+    # # do plotting
+    # u_init = storage_u[1]
+    # u1_min = min(min(u[0, :]) for u in storage_u)
+    # u1_max = max(max(u[0, :]) for u in storage_u)
+    # u2_min = min(min(u[1, :]) for u in storage_u)
+    # u2_max = max(max(u[1, :]) for u in storage_u)
+    # xlim = (u1_min, u1_max)
+    # ylim = (u2_min, u2_max)
+    # for i, u in enumerate(storage_u):
+    #     plt.cla()
+    #     plt.title(str(i))
+    #     plt.plot(u[0, :], u[1, :], 'kx')
+    #     plt.xlim(xlim)
+    #     plt.ylim(ylim)
+    #     plt.show()
+    #     plt.pause(0.25)

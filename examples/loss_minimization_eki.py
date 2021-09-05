@@ -5,27 +5,28 @@ import matplotlib.pyplot as plt
 from jax import random as rnd
 
 # Update follows eqns. (4) and (5) of Schillings and Stuart (2017)
+
 def update_ensemble(u, g, obs_mean, obs_noise_cov, dt=1.0, deterministic=True, key=rnd.PRNGKey(0)):
-    # u: N_par × N_ens, g: N_obs × N_ens
-    N_par, N_ens = u.shape
-    N_obs = g.shape[0]
+    # u: n_par × n_ens, g: n_obs × n_ens
+    n_par, n_ens = u.shape
+    n_obs = g.shape[0]
 
     # cross-covariances
-    cov_ug = jnp.atleast_2d(jnp.cov(u, g, bias=True)[:N_par,-N_obs:]) # N_par × N_obs
-    cov_gg = jnp.atleast_2d(jnp.cov(g, bias=True)) # N_obs × N_obs
+    cov_ug = jnp.atleast_2d(jnp.cov(u, g, bias=True)[:n_par,-n_obs:]) # n_par × n_obs
+    cov_gg = jnp.atleast_2d(jnp.cov(g, bias=True)) # n_obs × n_obs
 
     # scale noise using Δt
-    scaled_obs_noise_cov = obs_noise_cov / dt # N_obs × N_obs
-    noise = rnd.multivariate_normal(key, jnp.zeros((n_obs, 1)), obs_noise_cov, (N_ens,)).T
+    scaled_obs_noise_cov = obs_noise_cov / dt # n_obs × n_obs
+    noise = rnd.multivariate_normal(key, jnp.zeros((n_obs, 1)), obs_noise_cov, (n_ens,)).T
 
-    # add obs_mean (N_obs) to each column of noise (N_obs × N_ens) if
+    # add obs_mean (n_obs) to each column of noise (n_obs × n_ens) if
     # G is deterministic
-    y = obs_mean + noise if deterministic else jnp.repeat(obs_mean, N_ens, axis=1)
+    y = obs_mean + noise if deterministic else jnp.repeat(obs_mean, n_ens, axis=1)
 
     # update step
-    # N_obs × N_obs \ [N_obs × N_ens] --> tmp is [N_obs × N_ens]
+    # n_obs × n_obs \ [n_obs × n_ens] --> tmp is [n_obs × n_ens]
     tmp = jnp.matmul(jnp.linalg.inv(cov_gg + scaled_obs_noise_cov), y - g)
-    u_updated = u + jnp.matmul(cov_ug, tmp) # [N_par × N_ens]
+    u_updated = u + jnp.matmul(cov_ug, tmp) # [n_par × n_ens]
 
     return u_updated
 
@@ -69,19 +70,21 @@ if __name__ == "__main__":
         storage_u.append(ensemble.copy())
         storage_g.append(evaluations.copy())
 
-    # do plotting
-    u_init = storage_u[1]
-    u1_min = min(min(u[0, :]) for u in storage_u)
-    u1_max = max(max(u[0, :]) for u in storage_u)
-    u2_min = min(min(u[1, :]) for u in storage_u)
-    u2_max = max(max(u[1, :]) for u in storage_u)
-    xlim = (u1_min, u1_max)
-    ylim = (u2_min, u2_max)
-    for i, u in enumerate(storage_u):
-        plt.cla()
-        plt.title(str(i))
-        plt.plot(u[0, :], u[1, :], 'kx')
-        plt.xlim(xlim)
-        plt.ylim(ylim)
-        plt.show()
-        plt.pause(0.25)
+    print(obs_mean.shape)
+
+    # # do plotting
+    # u_init = storage_u[1]
+    # u1_min = min(min(u[0, :]) for u in storage_u)
+    # u1_max = max(max(u[0, :]) for u in storage_u)
+    # u2_min = min(min(u[1, :]) for u in storage_u)
+    # u2_max = max(max(u[1, :]) for u in storage_u)
+    # xlim = (u1_min, u1_max)
+    # ylim = (u2_min, u2_max)
+    # for i, u in enumerate(storage_u):
+    #     plt.cla()
+    #     plt.title(str(i))
+    #     plt.plot(u[0, :], u[1, :], 'kx')
+    #     plt.xlim(xlim)
+    #     plt.ylim(ylim)
+    #     plt.show()
+    #     plt.pause(0.25)
