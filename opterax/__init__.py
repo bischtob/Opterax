@@ -1,6 +1,7 @@
 """Opterax: composable ensemble processing and optimization, in JAX."""
 
 from opterax._src.loss import l2_loss
+from opterax._src.eki import grad_eki
 
 __version__ = "0.0.1"
 
