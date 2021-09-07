@@ -8,7 +8,7 @@ import jax.numpy as jnp
 import matplotlib.pyplot as plt
 
 
-# single-layer linear perceptron loss
+# single-layer perceptron loss
 @functools.partial(jax.vmap, in_axes=(None, 0))
 def model(params, x):
   return jnp.tanh(jnp.dot(params, x))
