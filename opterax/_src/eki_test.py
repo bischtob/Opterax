@@ -12,10 +12,11 @@ import numpy as np
 class EkiTest(parameterized.TestCase):
 
   def setUp(self):
+    """prepare test components."""
     super().setUp()
-
     def loss(y_pred, y):
-        return jnp.mean(optax.l2_loss(y_pred, y))
+      """standard l2-loss."""
+      return jnp.mean(optax.l2_loss(y_pred, y))
 
     self.obs_err_cov = 1e-8 * jnp.eye(2)
     self.loss = loss
@@ -25,6 +26,7 @@ class EkiTest(parameterized.TestCase):
 
   @chex.all_variants
   def test_eki(self):
+    """test eki-based gradient approximation."""
     grad_fcn = opterax.grad_eki(self.loss, self.obs_err_cov)
     tmp = self.variant(grad_fcn)(self.params, self.y_pred, self.ys)
 
