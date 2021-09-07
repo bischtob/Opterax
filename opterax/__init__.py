@@ -5,5 +5,5 @@ from opterax._src.eki import grad_eki
 __version__ = "0.0.1"
 
 __all__ = (
-    "eki",
+    "grad_eki",
 )
