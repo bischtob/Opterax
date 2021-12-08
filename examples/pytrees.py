@@ -98,7 +98,7 @@ if __name__ == "__main__":
     print("value_flat={}\nvalue_tree={}".format(value_flat, value_tree))
 
     # Transform the flat value list using an element-wise numeric transformer
-    transformed_flat = list(map(lambda v: jnp.mean(v, axis=0), value_flat))
+    transformed_flat = list(map(lambda v: v.shape, value_flat))
     print("transformed_flat={}".format(transformed_flat))
 
     # # Reconstruct the structured output, using the original
